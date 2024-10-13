@@ -11,19 +11,23 @@ paths:
       deprecated: false
       description: ''
       tags: []
-      parameters:
-        - name: talk_session_id
-          in: query
-          description: ''
-          required: false
-          schema:
-            type: string
-        - name: user_id
-          in: query
-          description: ''
-          required: false
-          schema:
-            type: string
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                talk_session_id:
+                  type: string
+              required:
+                - user_id
+                - talk_session_id
+            example:
+              user_id: '0'
+              talk_session_id: '0'
       responses:
         '200':
           description: ''

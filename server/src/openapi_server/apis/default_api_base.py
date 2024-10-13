@@ -2,6 +2,7 @@
 
 from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 
+from openapi_server.models.predicts_groups_post_request import PredictsGroupsPostRequest
 from openapi_server.models.test_get200_response import TestGet200Response
 from openapi_server.security_api import get_token_basic
 
@@ -13,8 +14,7 @@ class BaseDefaultApi:
         BaseDefaultApi.subclasses = BaseDefaultApi.subclasses + (cls,)
     async def predicts_groups_post(
         self,
-        talk_session_id: str,
-        user_id: str,
+        predicts_groups_post_request: PredictsGroupsPostRequest,
     ) -> object:
         """"""
         ...

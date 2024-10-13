@@ -10,23 +10,15 @@ paths:
     post:
       deprecated: false
       description: ""
-      parameters:
-      - description: ""
-        explode: true
-        in: query
-        name: talk_session_id
-        required: false
-        schema:
-          type: string
-        style: form
-      - description: ""
-        explode: true
-        in: query
-        name: user_id
-        required: false
-        schema:
-          type: string
-        style: form
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            example:
+              user_id: "0"
+              talk_session_id: "0"
+            schema:
+              $ref: '#/components/schemas/_predicts_groups_post_request'
       responses:
         "200":
           content:
@@ -56,6 +48,19 @@ paths:
       tags: []
 components:
   schemas:
+    _predicts_groups_post_request:
+      properties:
+        user_id:
+          title: user_id
+          type: string
+        talk_session_id:
+          title: talk_session_id
+          type: string
+      required:
+      - talk_session_id
+      - user_id
+      title: _predicts_groups_post_request
+      type: object
     _test_get_200_response:
       example:
         text: hello

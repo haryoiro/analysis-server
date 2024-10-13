@@ -23,6 +23,7 @@ from fastapi import (  # noqa: F401
 )
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
+from openapi_server.models.predicts_groups_post_request import PredictsGroupsPostRequest
 from openapi_server.models.test_get200_response import TestGet200Response
 from openapi_server.security_api import get_token_basic
 
@@ -43,8 +44,7 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
     response_model_by_alias=True,
 )
 async def predicts_groups_post(
-    talk_session_id: str = Query(None, description="", alias="talk_session_id"),
-    user_id: str = Query(None, description="", alias="user_id"),
+    predicts_groups_post_request: PredictsGroupsPostRequest = Body(None, description=""),
     token_basic: TokenModel = Security(
         get_token_basic
     ),
@@ -53,7 +53,7 @@ async def predicts_groups_post(
     return {"basic": "success"}
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
-    return await BaseDefaultApi.subclasses[0]().predicts_groups_post(talk_session_id, user_id)
+    return await BaseDefaultApi.subclasses[0]().predicts_groups_post(predicts_groups_post_request)
 
 
 @router.get(
