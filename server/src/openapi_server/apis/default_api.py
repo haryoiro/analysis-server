@@ -50,7 +50,7 @@ async def predicts_groups_post(
     ),
 ) -> object:
     """"""
-    return {"basic": token_basic.sub}
+    return {"basic": "success"}
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseDefaultApi.subclasses[0]().predicts_groups_post(talk_session_id, user_id)
