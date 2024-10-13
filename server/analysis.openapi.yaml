@@ -1,0 +1,65 @@
+openapi: 3.0.1
+info:
+  title: analysis
+  description: ''
+  version: 1.0.0
+tags: []
+paths:
+  /predicts/groups:
+    post:
+      summary: API
+      deprecated: false
+      description: ''
+      tags: []
+      parameters:
+        - name: talk_session_id
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+        - name: user_id
+          in: query
+          description: ''
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - basic: []
+  /test:
+    get:
+      summary: テストAPI
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text:
+                    type: string
+                    description: テキスト
+                    default: hello
+          headers: {}
+      security: []
+components:
+  schemas: {}
+  securitySchemes:
+    basic:
+      type: http
+      scheme: basic
+servers: []
