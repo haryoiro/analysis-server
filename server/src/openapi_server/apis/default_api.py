@@ -50,7 +50,7 @@ async def predicts_groups_post(
     ),
 ) -> object:
     """"""
-    return {"basic": "success"}
+
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseDefaultApi.subclasses[0]().predicts_groups_post(predicts_groups_post_request)
@@ -68,7 +68,7 @@ async def predicts_groups_post(
 async def test_get(
 ) -> TestGet200Response:
     """"""
-    return {"text": "hello"}
+
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseDefaultApi.subclasses[0]().test_get()

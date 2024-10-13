@@ -37,4 +37,5 @@ websockets==10.0
 numpy==2.1.2
 pandas==2.2.3
 SQLAlchemy==2.0.35
+psycopg2==2.9.9
 scikit-learn==1.5.2
