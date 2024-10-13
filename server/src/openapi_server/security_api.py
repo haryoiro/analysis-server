@@ -18,6 +18,11 @@ from fastapi.security.api_key import APIKeyCookie, APIKeyHeader, APIKeyQuery  # 
 
 from openapi_server.models.extra_models import TokenModel
 
+import secrets
+import os
+
+username = os.getenv('ANALYSIS_USER')
+password = os.getenv('ANALYSIS_USER_PASSWORD')
 
 basic_auth = HTTPBasic()
 
@@ -32,6 +37,15 @@ def get_token_basic(
     :type credentials: HTTPBasicCredentials
     :rtype: TokenModel | None
     """
+    correct_username = secrets.compare_digest(credentials.username, username)
+    correct_password = secrets.compare_digest(credentials.password, password)
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WW_Authenticate": "Basic"},
+        )
 
+    return TokenModel(sub="success")
     ...
 
