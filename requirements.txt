@@ -1,8 +1,14 @@
+setuptools==63.2.0
 fastapi==0.100.1
 fastapi-code-generator==0.5.1
 uvicorn==0.23.1
-numpy==1.24.2
-pandas==1.5.3
-SQLAlchemy==1.4.54
-scikit-learn==1.2.2
-scipy==1.10.1
+# numpy==1.24.2
+numpy==2.1.2
+# pandas==1.5.3
+pandas==2.2.3
+# SQLAlchemy==1.4.54
+SQLAlchemy==2.0.35
+# scipy==1.10.1
+# scipy==1.14.1
+# scikit-learn==1.2.2
+scikit-learn==1.5.2
