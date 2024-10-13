@@ -5,6 +5,9 @@ services:
       # context: .
       dockerfile: ./server/Dockerfile
       target: service
+    environment:
+      - ANALYSIS_USER=${ANALYSIS_USER}
+      - ANALYSIS_USER_PASSWORD=${ANALYSIS_USER_PASSWORD}
     ports:
       - "8000:8000"
     # command: uvicorn openapi_server.main:app --host 0.0.0.0 --port 8080
