@@ -7,8 +7,8 @@ ENV PATH="/venv/bin:$PATH"
 
 RUN pip install --upgrade pip
 
-COPY . .
 COPY pyproject.toml .
+COPY . .
 RUN pip install setuptools
 RUN pip install -r requirements.txt
 RUN pip install --no-cache-dir .
