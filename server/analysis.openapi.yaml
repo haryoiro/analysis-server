@@ -7,7 +7,7 @@ tags: []
 paths:
   /predicts/groups:
     post:
-      summary: API
+      summary: group予測
       deprecated: false
       description: ''
       tags: []
@@ -28,6 +28,34 @@ paths:
             example:
               user_id: '0'
               talk_session_id: '0'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: {}
+          headers: {}
+      security:
+        - basic: []
+  /reports/generates:
+    post:
+      summary: レポート作成
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                talk_session_id:
+                  type: string
+              required:
+                - talk_session_id
       responses:
         '200':
           description: ''

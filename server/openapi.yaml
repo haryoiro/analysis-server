@@ -29,7 +29,29 @@ paths:
           description: ""
       security:
       - basic: []
-      summary: API
+      summary: group予測
+      tags: []
+  /reports/generates:
+    post:
+      deprecated: false
+      description: ""
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_reports_generates_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                properties: {}
+                type: object
+          description: ""
+      security:
+      - basic: []
+      summary: レポート作成
       tags: []
   /test:
     get:
@@ -60,6 +82,15 @@ components:
       - talk_session_id
       - user_id
       title: _predicts_groups_post_request
+      type: object
+    _reports_generates_post_request:
+      properties:
+        talk_session_id:
+          title: talk_session_id
+          type: string
+      required:
+      - talk_session_id
+      title: _reports_generates_post_request
       type: object
     _test_get_200_response:
       example:

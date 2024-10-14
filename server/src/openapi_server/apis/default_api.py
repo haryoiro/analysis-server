@@ -23,7 +23,9 @@ from fastapi import (  # noqa: F401
 )
 
 from openapi_server.models.extra_models import TokenModel  # noqa: F401
+from typing import Any, Dict, Optional
 from openapi_server.models.predicts_groups_post_request import PredictsGroupsPostRequest
+from openapi_server.models.reports_generates_post_request import ReportsGeneratesPostRequest
 from openapi_server.models.test_get200_response import TestGet200Response
 from openapi_server.security_api import get_token_basic
 
@@ -40,20 +42,40 @@ for _, name, _ in pkgutil.iter_modules(ns_pkg.__path__, ns_pkg.__name__ + "."):
         200: {"model": object, "description": ""},
     },
     tags=["default"],
-    summary="API",
+    summary="group予測",
     response_model_by_alias=True,
 )
 async def predicts_groups_post(
-    predicts_groups_post_request: PredictsGroupsPostRequest = Body(None, description=""),
+    predicts_groups_post_request: Optional[PredictsGroupsPostRequest] = Body(None, description=""),
     token_basic: TokenModel = Security(
         get_token_basic
     ),
 ) -> object:
     """"""
-
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseDefaultApi.subclasses[0]().predicts_groups_post(predicts_groups_post_request)
+
+
+@router.post(
+    "/reports/generates",
+    responses={
+        200: {"model": object, "description": ""},
+    },
+    tags=["default"],
+    summary="レポート作成",
+    response_model_by_alias=True,
+)
+async def reports_generates_post(
+    reports_generates_post_request: Optional[ReportsGeneratesPostRequest] = Body(None, description=""),
+    token_basic: TokenModel = Security(
+        get_token_basic
+    ),
+) -> object:
+    """"""
+    if not BaseDefaultApi.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApi.subclasses[0]().reports_generates_post(reports_generates_post_request)
 
 
 @router.get(
@@ -68,7 +90,6 @@ async def predicts_groups_post(
 async def test_get(
 ) -> TestGet200Response:
     """"""
-
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseDefaultApi.subclasses[0]().test_get()
