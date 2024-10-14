@@ -9,7 +9,7 @@ RUN pip install --upgrade pip
 
 COPY ./server/pyproject.toml .
 COPY ./server .
-RUN pip install setuptools
+RUN pip install "setuptools>=70.0.0"
 RUN pip install -r requirements.txt
 RUN pip install --no-cache-dir .
 
