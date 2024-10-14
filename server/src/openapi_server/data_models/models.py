@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import BigInteger, Boolean, CheckConstraint, Column, DateTime, Float, Integer, SmallInteger, String, Table, Text, text
+from sqlalchemy import ForeignKey, BigInteger, Boolean, CheckConstraint, Column, DateTime, Float, Integer, SmallInteger, String, Table, Text, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
@@ -48,7 +48,7 @@ class RepresentativeOpinion(Base):
     __tablename__ = 'representative_opinions'
 
     talk_session_id = Column(UUID, primary_key=True, nullable=False)
-    opinion_id = Column(UUID, primary_key=True, nullable=False)
+    opinion_id = Column(UUID, ForeignKey("opinions.opinion_id"), primary_key=True, nullable=False)
     group_id = Column(Integer, primary_key=True, nullable=False)
     rank = Column(Integer, nullable=False)
     updated_at = Column(DateTime, nullable=False, server_default=text("now()"))
