@@ -20,17 +20,9 @@ from sklearn.metrics import silhouette_score
 from typing import Any, Dict, List
 
 seed = 302
-Session = None
 
-def connect_db():
-    global Session
-    database_url = os.getenv('DATABASE_URL', '')
-    engine = create_engine(database_url)
-    session_factory = sessionmaker(autocommit=False, bind=engine)
-    Session = scoped_session(session_factory)
-
-
-def prepare_dataset(talk_session_id: str) -> List[Vote]:
+def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
+    Session = session
     idx_to_userid = None
     predict = None
     dataset = None
@@ -207,5 +199,5 @@ def prepare_dataset(talk_session_id: str) -> List[Vote]:
         result = session.execute(upsert_stmt)
         session.commit()
 
-def predicts_groups(predicts_groups_post_request: PredictsGroupsPostRequest):
-    prepare_dataset(predicts_groups_post_request.talk_session_id)
+def predicts_groups(session, predicts_groups_post_request: PredictsGroupsPostRequest):
+    prepare_dataset(session, predicts_groups_post_request.talk_session_id)
