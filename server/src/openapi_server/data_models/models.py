@@ -105,8 +105,7 @@ class TalkSessionLocation(Base):
 class TalkSessionReport(Base):
     __tablename__ = 'talk_session_reports'
 
-    talk_session_report_id = Column(UUID, primary_key=True)
-    talk_session_id = Column(UUID, nullable=False, unique=True)
+    talk_session_id = Column(UUID, primary_key=True, unique=True)
     report = Column(Text, nullable=False)
     created_at = Column(DateTime, nullable=False, server_default=text("now()"))
     updated_at = Column(DateTime, nullable=False, server_default=text("now()"))
@@ -179,9 +178,9 @@ class User(Base):
 class Vote(Base):
     __tablename__ = 'votes'
     __table_args__ = (
-        Index('idx_votes_user_id_opinion_id', 'user_id', 'opinion_id'),
+        Index('idx_votes_opinion_id_user_id', 'opinion_id', 'user_id'),
         Index('idx_votes_vote_id_opinion_id', 'vote_id', 'opinion_id'),
-        Index('idx_votes_opinion_id_user_id', 'opinion_id', 'user_id')
+        Index('idx_votes_user_id_opinion_id', 'user_id', 'opinion_id')
     )
 
     vote_id = Column(UUID, primary_key=True)
