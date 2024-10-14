@@ -1,5 +1,5 @@
 # coding: utf-8
-from sqlalchemy import ForeignKey, BigInteger, Boolean, CheckConstraint, Column, DateTime, Float, Integer, SmallInteger, String, Table, Text, text
+from sqlalchemy import ForeignKey, BigInteger, Boolean, CheckConstraint, Column, DateTime, Float, Index, Integer, SmallInteger, String, Table, Text, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.sql.sqltypes import NullType
 from sqlalchemy.ext.declarative import declarative_base
@@ -34,14 +34,19 @@ t_geometry_columns = Table(
 
 class Opinion(Base):
     __tablename__ = 'opinions'
+    __table_args__ = (
+        Index('idx_opinions_opinion_id_parent_opinion_id', 'opinion_id', 'parent_opinion_id'),
+    )
 
     opinion_id = Column(UUID, primary_key=True)
-    talk_session_id = Column(UUID, nullable=False)
-    user_id = Column(UUID, nullable=False)
-    parent_opinion_id = Column(UUID)
+    talk_session_id = Column(UUID, nullable=False, index=True)
+    user_id = Column(UUID, nullable=False, index=True)
+    parent_opinion_id = Column(UUID, index=True)
     title = Column(String)
     content = Column(String, nullable=False)
     created_at = Column(DateTime, nullable=False, server_default=text("now()"))
+    picture_url = Column(String)
+    reference_url = Column(String)
 
 
 class RepresentativeOpinion(Base):
@@ -64,6 +69,9 @@ class SchemaMigration(Base):
 
 class Session(Base):
     __tablename__ = 'sessions'
+    __table_args__ = (
+        Index('idx_session_id_user_id', 'user_id', 'session_id'),
+    )
 
     session_id = Column(UUID, primary_key=True)
     user_id = Column(UUID, nullable=False)
@@ -92,8 +100,16 @@ class TalkSessionLocation(Base):
 
     talk_session_id = Column(UUID, primary_key=True)
     location = Column(NullType, nullable=False)
-    city = Column(String, nullable=False)
-    prefecture = Column(String, nullable=False)
+
+
+class TalkSessionReport(Base):
+    __tablename__ = 'talk_session_reports'
+
+    talk_session_report_id = Column(UUID, primary_key=True)
+    talk_session_id = Column(UUID, nullable=False, unique=True)
+    report = Column(Text, nullable=False)
+    created_at = Column(DateTime, nullable=False, server_default=text("now()"))
+    updated_at = Column(DateTime, nullable=False, server_default=text("now()"))
 
 
 class TalkSession(Base):
@@ -104,10 +120,15 @@ class TalkSession(Base):
     theme = Column(String, nullable=False)
     scheduled_end_time = Column(DateTime, nullable=False)
     created_at = Column(DateTime, nullable=False, server_default=text("now()"))
+    city = Column(String)
+    prefecture = Column(String)
 
 
 class UserAuth(Base):
     __tablename__ = 'user_auths'
+    __table_args__ = (
+        Index('idx_user_id_user_subject', 'user_id', 'subject'),
+    )
 
     user_auth_id = Column(UUID, primary_key=True)
     user_id = Column(UUID, nullable=False)
@@ -125,10 +146,11 @@ class UserDemographic(Base):
     year_of_birth = Column(Integer)
     occupation = Column(SmallInteger)
     gender = Column(SmallInteger, nullable=False)
-    municipality = Column(String)
+    city = Column(String)
     household_size = Column(SmallInteger)
     created_at = Column(DateTime, nullable=False, server_default=text("now()"))
     updated_at = Column(DateTime, nullable=False, server_default=text("now()"))
+    prefecture = Column(String(10))
 
 
 class UserGroupInfo(Base):
@@ -146,7 +168,7 @@ class UserGroupInfo(Base):
 class User(Base):
     __tablename__ = 'users'
 
-    user_id = Column(UUID, primary_key=True)
+    user_id = Column(UUID, primary_key=True, index=True)
     display_id = Column(String)
     display_name = Column(String)
     icon_url = Column(String)
@@ -156,6 +178,11 @@ class User(Base):
 
 class Vote(Base):
     __tablename__ = 'votes'
+    __table_args__ = (
+        Index('idx_votes_user_id_opinion_id', 'user_id', 'opinion_id'),
+        Index('idx_votes_vote_id_opinion_id', 'vote_id', 'opinion_id'),
+        Index('idx_votes_opinion_id_user_id', 'opinion_id', 'user_id')
+    )
 
     vote_id = Column(UUID, primary_key=True)
     opinion_id = Column(UUID, nullable=False)
