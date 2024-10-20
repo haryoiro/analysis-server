@@ -17,6 +17,8 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
+from scipy.spatial import ConvexHull
+
 from typing import Any, Dict, List
 
 seed = 302
@@ -141,6 +143,29 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
 
         vote_rate = np.divide(agree_gv, all_gv, out=np.zeros_like(agree_gv, dtype=float), where=(all_gv!=0))
 
+    cluster_user_indices = [[] for i in range(n_clusters)]
+    cluster_user_positions = [[] for i in range(n_clusters)]
+    cluster_user_id = [[] for i in range(n_clusters)]
+    for user_idx in users_indices:
+        group_id = int(predict[user_idx])
+        user_id = idx_to_userid[user_idx]
+        pos_x = float(dataset[user_idx][0])
+        pos_y = float(dataset[user_idx][1])
+        cluster_user_indices[group_id].append(user_idx)
+        cluster_user_positions[group_id].append([pos_x, pos_y])
+        cluster_user_id[group_id].append(user_id)
+
+    user_idx_to_permeter_index = [None for i in range(len(users_indices))]
+
+    for group_id in range(n_clusters):
+        try:
+            hull = ConvexHull(cluster_user_positions[group_id])
+            for perimeter_index, np_index in enumerate(hull.vertices):
+                index = int(np_index)
+                user_idx = cluster_user_indices[group_id][index]
+                user_idx_to_permeter_index[user_idx] = perimeter_index
+        except Exception as e:
+            print(f"凸包アルゴリズムまわで予期せぬエラーが発生しました: {e}")
 
     with Session() as session:
         now = datetime.now()
@@ -152,7 +177,8 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
                 pos_x = float(dataset[user_idx][0]),
                 pos_y = float(dataset[user_idx][1]),
                 created_at = now,
-                updated_at = now
+                updated_at = now,
+                perimeter_index = user_idx_to_permeter_index[user_idx]
             ) for user_idx in users_indices
         ])
 
@@ -162,7 +188,8 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
                 group_id=stmt.excluded.group_id,
                 pos_x=stmt.excluded.pos_x,
                 pos_y=stmt.excluded.pos_y,
-                updated_at=stmt.excluded.updated_at
+                updated_at=stmt.excluded.updated_at,
+                perimeter_index=stmt.excluded.perimeter_index
             ),
         )
 

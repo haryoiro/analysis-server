@@ -162,6 +162,7 @@ class UserGroupInfo(Base):
     pos_y = Column(Float(53), nullable=False)
     updated_at = Column(DateTime, nullable=False, server_default=text("now()"))
     created_at = Column(DateTime, nullable=False, server_default=text("now()"))
+    perimeter_index = Column(Integer)
 
 
 class User(Base):
@@ -178,8 +179,8 @@ class User(Base):
 class Vote(Base):
     __tablename__ = 'votes'
     __table_args__ = (
-        Index('idx_votes_opinion_id_user_id', 'opinion_id', 'user_id'),
         Index('idx_votes_vote_id_opinion_id', 'vote_id', 'opinion_id'),
+        Index('idx_votes_opinion_id_user_id', 'opinion_id', 'user_id'),
         Index('idx_votes_user_id_opinion_id', 'user_id', 'opinion_id')
     )
 
