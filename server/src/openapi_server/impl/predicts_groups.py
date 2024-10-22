@@ -67,6 +67,7 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
         opinions_indices = [i for i in range(opinions_count)]
 
         vectors = [[0 for j in range(opinions_count)] for i in range(users_count)]
+        pass_vote = [[0 for j in range(opinions_count)] for i in range(users_count)]
 
         for row in result:
             # vote_type unvote:0 agree:1 disagree:2 pass:3
@@ -77,6 +78,8 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
                 vectors[user_idx][opinion_idx] = 1
             elif vote_type == 2:
                 vectors[user_idx][opinion_idx] = -1
+            elif vote_type == 3:
+                pass_vote[user_idx][opinion_idx] = 1
 
         predict = None
         n_clusters = 2
@@ -100,6 +103,9 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
 
         # あるクラスターの賛成数と投票数
         agree_gv = [[0 for j in range(len(opinions_indices))] for i in range(n_clusters)]
+        disagree_gv = [[0 for j in range(len(opinions_indices))] for i in range(n_clusters)]
+        pass_gv = [[0 for j in range(len(opinions_indices))] for i in range(n_clusters)]
+        # vote_count_gv = [[0 for j in range(len(opinions_indices))] for i in range(n_clusters)]
         all_gv = [[0 for j in range(len(opinions_indices))] for i in range(n_clusters)]
 
         # あるクラスター以外の賛成数と投票数
@@ -111,12 +117,16 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
         for i in range(len(vectors)):
             cluster_idx = predict[i]
             for j in range(len(vectors[i])):
+                # vote_count_gv[cluster_idx][j] += 1
                 # あるクラスターの賛成数と投票数
                 if 1 == vectors[i][j]:
                     agree_gv[cluster_idx][j] += 1
                     all_gv[cluster_idx][j] += 1
                 elif -1 == vectors[i][j]:
+                    disagree_gv[cluster_idx][j] += 1
                     all_gv[cluster_idx][j] += 1
+                elif 1 == pass_vote[i][j]:
+                    pass_gv[cluster_idx][j] += 1
 
                 other_clusters = clusters_set - {cluster_idx}
                 other_clusters = list(other_clusters)
@@ -206,7 +216,10 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
                 group_id = int(group_id),
                 rank = rank,
                 created_at = now,
-                updated_at = now
+                updated_at = now,
+                agree_count = int(agree_gv[int(group_id)][int(opinion_idx)]),
+                disagree_count = int(disagree_gv[int(group_id)][int(opinion_idx)]),
+                pass_count = int(pass_gv[int(group_id)][int(opinion_idx)])
                 ) for rank, opinion_idx in enumerate(opinios_idx)
             ] for group_id, opinios_idx in enumerate(representative_group_opinion_idx)
         ]
@@ -219,7 +232,10 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
             index_elements=[RepresentativeOpinion.talk_session_id, RepresentativeOpinion.opinion_id, RepresentativeOpinion.group_id],
             set_=dict(
                 rank=stmt.excluded.rank,
-                updated_at=stmt.excluded.updated_at
+                updated_at=stmt.excluded.updated_at,
+                agree_count=stmt.excluded.agree_count,
+                disagree_count=stmt.excluded.disagree_count,
+                pass_count=stmt.excluded.pass_count
             ),
         )
 

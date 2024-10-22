@@ -58,6 +58,9 @@ class RepresentativeOpinion(Base):
     rank = Column(Integer, nullable=False)
     updated_at = Column(DateTime, nullable=False, server_default=text("now()"))
     created_at = Column(DateTime, nullable=False, server_default=text("now()"))
+    agree_count = Column(Integer, nullable=False, server_default=text("0"))
+    disagree_count = Column(Integer, nullable=False, server_default=text("0"))
+    pass_count = Column(Integer, nullable=False, server_default=text("0"))
 
 
 class SchemaMigration(Base):
