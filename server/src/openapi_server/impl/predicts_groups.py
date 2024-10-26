@@ -86,7 +86,8 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
         n_clusters = 2
         best_silhouette_score = -1
 
-        for _n_clusters in range(2, 10):
+        # 9だとグループが多すぎるから3にした
+        for _n_clusters in range(2, 4):
             try:
                 _predict = KMeans(n_clusters=_n_clusters,random_state=seed).fit_predict(vectors)
                 score = silhouette_score(vectors, _predict)
@@ -219,9 +220,8 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
         result = session.execute(upsert_stmt)
         session.commit()
 
-
+    now = datetime.now()
     with Session() as session:
-        now = datetime.now()
         values = [
             [dict(
                 talk_session_id = talk_session_id,
@@ -253,6 +253,12 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
         )
 
         result = session.execute(upsert_stmt)
+        session.commit()
+
+    with Session() as session:
+        session.query(RepresentativeOpinion).\
+            filter(RepresentativeOpinion.talk_session_id == talk_session_id, RepresentativeOpinion.updated_at < now).\
+            delete()
         session.commit()
 
 def predicts_groups(session, predicts_groups_post_request: PredictsGroupsPostRequest):
