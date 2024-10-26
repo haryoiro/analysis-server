@@ -40,19 +40,21 @@ def prepare_dataset(session, talk_session_id: str):
     Session = session
     theme = ''
     text = ''
+    group_names = ["いちご","レモン","ぶどう","すいか"]
     with Session() as session:
         result = session.query(RepresentativeOpinion, Opinion).\
             join(Opinion, Opinion.opinion_id == RepresentativeOpinion.opinion_id).\
             where(RepresentativeOpinion.talk_session_id == talk_session_id, RepresentativeOpinion.rank < 5).\
             all()
 
-        text = 'talk_session_id,group_id,投稿の内容,グループにおける代表順位_値が小さい方が代表性が高い\n'
+        text = 'talk_session_id,グループ名,投稿の内容,グループにおける代表順位(値が小さい方が代表性が高い)\n'
         for row in result:
             talk_session_id = row[0].talk_session_id
             group_id = row[0].group_id
+            group_name = group_names[group_id]
             content = row[1].content
             rank = row[0].rank
-            row_text = f'{talk_session_id},{group_id},{content},{rank}'
+            row_text = f'{talk_session_id},{group_name},{content},{rank}'
             # print(row_text)
             text += row_text + '\n'
 
