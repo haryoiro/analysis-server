@@ -86,22 +86,6 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
         n_clusters = 2
         best_silhouette_score = -1
 
-        # 9だとグループが多すぎるから3にした
-        for _n_clusters in range(2, 4):
-            try:
-                _predict = KMeans(n_clusters=_n_clusters,random_state=seed).fit_predict(vectors)
-                score = silhouette_score(vectors, _predict)
-                # print(f"clusters {_n_clusters} score {score}")
-                if score > best_silhouette_score:
-                    predict = _predict
-                    n_clusters = _n_clusters
-                    best_silhouette_score = score
-            except Exception as e:
-                print(f"KMeans失敗しました: {e}")
-                if predict is None:
-                    predict = [0 for i in range(users_count)]
-                    n_clusters = 1
-
         print(f"clusters {n_clusters} score {best_silhouette_score}")
         # print(f"vectors {vectors}")
         DIMENTION_NUM = 2
@@ -112,6 +96,22 @@ def prepare_dataset(session, talk_session_id: str) -> List[Vote]:
         except Exception as e:
             print(f"PCA失敗しました: {e}")
             dataset = [[0, 0] for i in range(users_count)]
+
+        # 9だとグループが多すぎるから3にした
+        for _n_clusters in range(2, 4):
+            try:
+                _predict = KMeans(n_clusters=_n_clusters,random_state=seed).fit_predict(dataset)
+                score = silhouette_score(dataset, _predict)
+                # print(f"clusters {_n_clusters} score {score}")
+                if score > best_silhouette_score:
+                    predict = _predict
+                    n_clusters = _n_clusters
+                    best_silhouette_score = score
+            except Exception as e:
+                print(f"KMeans失敗しました: {e}")
+                if predict is None:
+                    predict = [0 for i in range(users_count)]
+                    n_clusters = 1
 
         dataset = np.array(dataset)
 
