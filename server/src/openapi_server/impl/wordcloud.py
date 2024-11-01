@@ -198,7 +198,9 @@ def prepare_dataset(session, talk_session_id: str):
     return wordcloud_buffer, tsne_buffer
 
 def wordclouds(session, reports_generates_post_request):
+    print("talksession ID" ,reports_generates_post_request)
     talk_session_id = reports_generates_post_request.talk_session_id
+    print("talksession ID" ,talk_session_id)
     wordcloud_bytes, tsne_bytes = prepare_dataset(session, talk_session_id)
 
     return {
