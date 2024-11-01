@@ -16,6 +16,7 @@ src/openapi_server/models/__init__.py
 src/openapi_server/models/extra_models.py
 src/openapi_server/models/predicts_groups_post_request.py
 src/openapi_server/models/reports_generates_post_request.py
+src/openapi_server/models/reports_wordclouds_post200_response.py
 src/openapi_server/models/test_get200_response.py
 src/openapi_server/security_api.py
 tests/conftest.py

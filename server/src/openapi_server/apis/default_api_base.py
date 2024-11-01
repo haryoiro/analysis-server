@@ -5,6 +5,7 @@ from typing import ClassVar, Dict, List, Tuple  # noqa: F401
 from typing import Any, Dict, Optional
 from openapi_server.models.predicts_groups_post_request import PredictsGroupsPostRequest
 from openapi_server.models.reports_generates_post_request import ReportsGeneratesPostRequest
+from openapi_server.models.reports_wordclouds_post200_response import ReportsWordcloudsPost200Response
 from openapi_server.models.test_get200_response import TestGet200Response
 from openapi_server.security_api import get_token_basic
 
@@ -26,6 +27,14 @@ class BaseDefaultApi:
         self,
         reports_generates_post_request: Optional[ReportsGeneratesPostRequest],
     ) -> object:
+        """"""
+        ...
+
+
+    async def reports_wordclouds_post(
+        self,
+        reports_generates_post_request: Optional[ReportsGeneratesPostRequest],
+    ) -> ReportsWordcloudsPost200Response:
         """"""
         ...
 

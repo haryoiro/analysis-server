@@ -2,9 +2,11 @@ from openapi_server.apis.default_api_base import BaseDefaultApi
 from openapi_server.models.predicts_groups_post_request import PredictsGroupsPostRequest
 from openapi_server.models.reports_generates_post_request import ReportsGeneratesPostRequest
 from openapi_server.models.test_get200_response import TestGet200Response
+from openapi_server.models.reports_wordclouds_post200_response import ReportsWordcloudsPost200Response
 
 from openapi_server.impl.predicts_groups import predicts_groups
 from openapi_server.impl.reports_generates import reports_generates
+from openapi_server.impl.wordcloud import wordclouds
 
 from typing import Optional
 
@@ -57,3 +59,13 @@ class MainApi(BaseDefaultApi):
         """"""
         return {"text": "hello"}
         ...
+
+    async def reports_wordclouds_post(
+        self,
+        reports_wordclouds_post_request: Optional[ReportsGeneratesPostRequest],
+    ) -> ReportsWordcloudsPost200Response:
+        """"""
+        res = wordclouds(Session, reports_wordclouds_post_request)
+        return res
+        ...
+

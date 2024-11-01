@@ -26,6 +26,7 @@ from openapi_server.models.extra_models import TokenModel  # noqa: F401
 from typing import Any, Dict, Optional
 from openapi_server.models.predicts_groups_post_request import PredictsGroupsPostRequest
 from openapi_server.models.reports_generates_post_request import ReportsGeneratesPostRequest
+from openapi_server.models.reports_wordclouds_post200_response import ReportsWordcloudsPost200Response
 from openapi_server.models.test_get200_response import TestGet200Response
 from openapi_server.security_api import get_token_basic
 
@@ -76,6 +77,24 @@ async def reports_generates_post(
     if not BaseDefaultApi.subclasses:
         raise HTTPException(status_code=500, detail="Not implemented")
     return await BaseDefaultApi.subclasses[0]().reports_generates_post(reports_generates_post_request)
+
+
+@router.post(
+    "/reports/wordclouds",
+    responses={
+        200: {"model": ReportsWordcloudsPost200Response, "description": ""},
+    },
+    tags=["default"],
+    summary="ワードクラウドテスト",
+    response_model_by_alias=True,
+)
+async def reports_wordclouds_post(
+    reports_generates_post_request: Optional[ReportsGeneratesPostRequest] = Body(None, description=""),
+) -> ReportsWordcloudsPost200Response:
+    """"""
+    if not BaseDefaultApi.subclasses:
+        raise HTTPException(status_code=500, detail="Not implemented")
+    return await BaseDefaultApi.subclasses[0]().reports_wordclouds_post(reports_generates_post_request)
 
 
 @router.get(

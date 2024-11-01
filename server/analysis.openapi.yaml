@@ -88,6 +88,40 @@ paths:
                     default: hello
           headers: {}
       security: []
+  /reports/wordclouds:
+    post:
+      summary: ワードクラウドテスト
+      deprecated: false
+      description: ''
+      tags: []
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                talk_session_id:
+                  type: string
+              required:
+                - talk_session_id
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  wordcloud:
+                    type: string
+                  tsne:
+                    type: string
+                required:
+                  - wordcloud
+                  - tsne
+          headers: {}
+      security: []
 components:
   schemas: {}
   securitySchemes:

@@ -68,6 +68,26 @@ paths:
       security: []
       summary: テストAPI
       tags: []
+  /reports/wordclouds:
+    post:
+      deprecated: false
+      description: ""
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/_reports_generates_post_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/_reports_wordclouds_post_200_response'
+          description: ""
+      security: []
+      summary: ワードクラウドテスト
+      tags: []
 components:
   schemas:
     _predicts_groups_post_request:
@@ -102,6 +122,22 @@ components:
           title: text
           type: string
       title: _test_get_200_response
+      type: object
+    _reports_wordclouds_post_200_response:
+      example:
+        tsne: tsne
+        wordcloud: wordcloud
+      properties:
+        wordcloud:
+          title: wordcloud
+          type: string
+        tsne:
+          title: tsne
+          type: string
+      required:
+      - tsne
+      - wordcloud
+      title: _reports_wordclouds_post_200_response
       type: object
   securitySchemes:
     basic:
